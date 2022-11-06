@@ -170,12 +170,6 @@ download \
   "https://sourceforge.net/projects/soxr/files/"
 
 download \
-  "release-0.98b.tar.gz" \
-  "vid.stab-release-0.98b.tar.gz" \
-  "299b2f4ccd1b94c274f6d94ed4f1c5b8" \
-  "https://github.com/georgmartius/vid.stab/archive/"
-
-download \
   "release-2.7.4.tar.gz" \
   "zimg-release-2.7.4.tar.gz" \
   "1757dcc11590ef3b5a56c701fd286345" \
@@ -204,12 +198,6 @@ download \
   "ogg-1.3.3.tar.gz" \
   "b8da1fe5ed84964834d40855ba7b93c2" \
   "https://github.com/xiph/ogg/archive/"
-
-download \
-  "Speex-1.2.0.tar.gz" \
-  "Speex-1.2.0.tar.gz" \
-  "4bec86331abef56129f9d1c994823f03" \
-  "https://github.com/xiph/speex/archive/"
 
 download \
   "n4.0.tar.gz" \
@@ -273,7 +261,7 @@ cd $BUILD_DIR/x265*
 cd build/linux
 [ $rebuild -eq 1 ] && find . -mindepth 1 ! -name 'make-Makefiles.bash' -and ! -name 'multilib.sh' -exec rm -r {} +
 PATH="$BIN_DIR:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_DIR" -DENABLE_SHARED:BOOL=OFF -DSTATIC_LINK_CRT:BOOL=ON -DENABLE_CLI:BOOL=OFF ../../source
-sed -i '' 's/-lgcc_s/-lgcc_eh/g' x265.pc
+sed -i 's/-lgcc_s/-lgcc_eh/g' x265.pc
 make -j $jval
 make install
 
@@ -352,17 +340,6 @@ PATH="$BIN_DIR:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_
 make -j $jval
 make install
 
-echo "*** Building libvidstab ***"
-cd $BUILD_DIR/vid.stab-release-*
-[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
-if [ "$platform" = "linux" ]; then
-  sed -i "s/vidstab SHARED/vidstab STATIC/" ./CMakeLists.txt
-elif [ "$platform" = "darwin" ]; then
-  sed -i "" "s/vidstab SHARED/vidstab STATIC/" ./CMakeLists.txt
-fi
-PATH="$BIN_DIR:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$TARGET_DIR"
-make -j $jval
-make install
 
 echo "*** Building openjpeg ***"
 cd $BUILD_DIR/openjpeg-*
@@ -403,14 +380,6 @@ cd $BUILD_DIR/ogg*
 make -j $jval
 make install
 
-echo "*** Building libspeex ***"
-cd $BUILD_DIR/speex*
-[ $rebuild -eq 1 -a -f Makefile ] && make distclean || true
-./autogen.sh
-./configure --prefix=$TARGET_DIR --disable-shared
-make -j $jval
-make install
-
 # FFMpeg
 echo "*** Building FFmpeg ***"
 cd $BUILD_DIR/FFmpeg*
@@ -443,9 +412,7 @@ if [ "$platform" = "linux" ]; then
     --enable-libopus \
     --enable-librtmp \
     --enable-libsoxr \
-    --enable-libspeex \
     --enable-libtheora \
-    --enable-libvidstab \
     --enable-libvo-amrwbenc \
     --enable-libvorbis \
     --enable-libvpx \
@@ -483,8 +450,6 @@ elif [ "$platform" = "darwin" ]; then
     --enable-libopus \
     --enable-librtmp \
     --enable-libsoxr \
-    --enable-libspeex \
-    --enable-libvidstab \
     --enable-libvorbis \
     --enable-libvpx \
     --enable-libwebp \

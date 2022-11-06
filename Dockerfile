@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu@sha256:44d7e0a972bfed7069e96dcb0d1c3cc37fa117841e8fa08a8efa18854c3eb11c
 
 # Basic packages needed to download dependencies and unpack them.
 RUN apt-get update && apt-get install -y \
